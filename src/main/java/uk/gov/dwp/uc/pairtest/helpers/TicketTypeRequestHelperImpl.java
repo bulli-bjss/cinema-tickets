@@ -22,9 +22,7 @@ public class TicketTypeRequestHelperImpl implements TicketTypeRequestHelper {
      */
     public void validateTicketTypes(TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
 
-        if ((int) Arrays.stream(ticketTypeRequests)
-                .filter(request -> request.type() == null)
-                .count() > 0) {
+        if (Arrays.stream(ticketTypeRequests).anyMatch(request -> request.type() == null)) {
             throw new InvalidPurchaseException("Ticket request contains null TicketType");
         }
     }
@@ -80,7 +78,7 @@ public class TicketTypeRequestHelperImpl implements TicketTypeRequestHelper {
     private int getCountForTicketType(TicketTypeRequest.Type type, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
 
         return Arrays.stream(ticketTypeRequests)
-                .filter(d->d.type() == type)
+                .filter(ticketTypeRequest->ticketTypeRequest.type() == type)
                 .map(ticketTypeRequest -> {
                     if (ticketTypeRequest.noOfTickets() >= MIN_TICKETS_PER_TRANSACTION &&
                             ticketTypeRequest.noOfTickets() <= MAX_TICKETS_PER_TRANSACTION) {
